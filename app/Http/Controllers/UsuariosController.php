@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\usuarios;
 use Illuminate\Http\Request;
+use App\Helpers\JwtLogin;
 
 class UsuariosController extends Controller
 {
@@ -82,4 +83,26 @@ class UsuariosController extends Controller
     {
         //
     }
+
+    public function iniciarSesion($usuario, $password) {
+        $message = 'Revisa tu usuario y contraseña.';
+        $usuario = usuarios::where(array('email' => $usuario, 'password' => $password))->first();
+        if (is_object($usuario)) {
+            if ($usuario->estado === 1) {
+                $jwt = new JwtLogin();
+                $token = $jwt->generarToken($usuario->id, $usuario->usuario, $usuario->password);
+                $validarToken = $jwt->verificarToken($token, true);
+                return array(
+                        'success' => true,
+                        'token' => $token,
+                        'tokenTiempo' => $validarToken,
+                        'usuario' => $usuario
+                );
+            } else {
+                $message = 'Usuario inactivo, comunicate con el administrador.';
+            }
+        }
+        return array( 'success' => false, 'msg' => $message);
+    }
+
 }

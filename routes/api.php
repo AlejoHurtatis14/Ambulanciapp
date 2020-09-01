@@ -17,3 +17,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::middleware(['guest'])->group(function () {
+    Route::group(['middleware' => ['cors']], function () {
+        Route::get('login/{usuario}/{password}', 'UsuariosController@iniciarSesion');
+    });
+});
+
+Route::middleware('validarInicioSesion')->group( function () {
+    Route::group(['middleware' => ['cors']], function () {
+
+    });
+});
