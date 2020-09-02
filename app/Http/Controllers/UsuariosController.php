@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\usuarios;
 use Illuminate\Http\Request;
-use App\Helpers\JwtLogin;
+use App\Settings\JwtLogin;
 
 class UsuariosController extends Controller
 {
@@ -23,9 +23,35 @@ class UsuariosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $mensaje = "El correo electronico ya existe.";
+        $validarCorreo = usuarios::where('email', $request->correo)->get();
+        if ($validarCorreo->isEmpty()) {
+            $usuario = new usuarios;
+            $usuario->documento = $request->documento;
+            $usuario->nombres = $request->nombres;
+            $usuario->apellidos = $request->apellidos;
+            $usuario->telefono = $request->telefono;
+            $usuario->direccion = $request->direccion;
+            $usuario->password = $request->clave;
+            $usuario->email = $request->email;
+            $usuario->estado = $request->estado;
+            $usuario->fk_perfil = $request->fk_perfil;
+            $usuario->fk_empresa = $request->fk_empresa;
+            if ($usuario->save()) {
+                return array(
+                    "success" => true,
+                    "mensaje" => "Se ha creado el usuario"
+                );
+            } else {
+                $mensaje = "No se ha podido crear el usuario.";
+            }
+        }
+        return array(
+            "success" => false,
+            "mensaje" => $mensaje,
+        );
     }
 
     /**
@@ -90,7 +116,7 @@ class UsuariosController extends Controller
         if (is_object($usuario)) {
             if ($usuario->estado === 1) {
                 $jwt = new JwtLogin();
-                $token = $jwt->generarToken($usuario->id, $usuario->usuario, $usuario->password);
+                $token = $jwt->generarToken($usuario->id, $usuario->nombres, $usuario->password);
                 $validarToken = $jwt->verificarToken($token, true);
                 return array(
                         'success' => true,
@@ -102,7 +128,36 @@ class UsuariosController extends Controller
                 $message = 'Usuario inactivo, comunicate con el administrador.';
             }
         }
-        return array( 'success' => false, 'msg' => $message);
+        return array( 'success' => false, 'mensaje' => $message);
+    }
+
+    public function inactivaActivarUsuario($idUsuario) {
+        $usuario = usuarios::where('id', $idUsuario)->get();
+        if (!$usuario->isEmpty()) {
+            $result = usuarios::where('id', $idUsuario)->update(['estado' => ($usuario[0]['estado'] == 1 ? 0 : 1) ]);
+            return array(
+                "success" => true,
+                "mensaje" => "Usuario " . ($usuario[0]['estado'] == 1 ? 'inactivado' : 'activado') . " correctamente."
+            );
+        }
+        return array(
+            "success" => false,
+            "mensaje" => 'El usuario no existe.'
+        );
+    }
+
+    public function obtenerUsuarios($empresa, $estado) {
+        $usuarios = [];
+        if ($estado !== '') {
+            $usuarios = usuarios::where('estado', $estado)->where('fk_empresa', $empresa)->get();
+        } else {
+            $usuarios = usuarios::where('fk_empresa', $empresa)->get();
+        }
+        return array(
+            "success" => ($usuarios->isEmpty() ? false : true),
+            "mensaje" => ($usuarios->isEmpty() ? 'No hay usuarios disponibles.' : 'Aqui tenemos tus usuarios.'),
+            "datos" => $usuarios
+        );
     }
 
 }

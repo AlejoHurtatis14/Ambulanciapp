@@ -14,6 +14,7 @@ class EmpresasSeeder extends Seeder
         DB::table('empresas')->insert([
             'razon_social' => 'Ambulancias a su servicio',
             'telefono' => '3546798',
+            'documento' => '856345',
             'direccion' => 'Ciudad Victoria.',
             'email' => 'ambulanciasservicio@gmail.com',
             'fk_prestador' => 1,

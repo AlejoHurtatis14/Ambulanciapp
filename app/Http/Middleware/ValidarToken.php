@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 use Closure;
-use App\Helpers\JwtLogin;
+use App\Settings\JwtLogin;
 use Illuminate\Http\JsonResponse;
 
 class ValidarToken {

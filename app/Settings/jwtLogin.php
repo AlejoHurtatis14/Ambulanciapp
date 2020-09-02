@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Settings;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\SignatureInvalidException;

@@ -22,9 +22,25 @@ class AtencionesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $atencion = new atenciones;
+        $atencion->ubicacion = $request->ubicacion;
+        $atencion->traslado = $request->traslado;
+        $atencion->observacion = $request->observacion;
+        $atencion->estado = $request->estado;
+        $atencion->fk_empresa = $request->empresa;
+        $atencion->fk_ambulancia = $request->ambulancia;
+        if ($atencion->save()) {
+            return array(
+                "success" => true,
+                "mensaje" => "Se ha creado el registro del recorrido"
+            );
+        }
+        return array(
+            "success" => false,
+            "mensaje" => "No se ha podido guardar el registro del recorrido.",
+        );
     }
 
     /**
@@ -82,4 +98,19 @@ class AtencionesController extends Controller
     {
         //
     }
+
+    public function obtenerAtenciones($empresa, $estado) {
+        $atenciones = [];
+        if ($estado !== 'Todos') {
+            $atenciones = atenciones::where('estado', $estado)->where('fk_empresa', $empresa)->get();
+        } else {
+            $atenciones = atenciones::where('fk_empresa', $empresa)->get();
+        }
+        return array(
+            "success" => ($atenciones->isEmpty() ? false : true),
+            "mensaje" => ($atenciones->isEmpty() ? 'No hay atenciones disponibles.' : 'Aqui tenemos tus atenciones.'),
+            "datos" => $atenciones
+        );
+    }
+
 }

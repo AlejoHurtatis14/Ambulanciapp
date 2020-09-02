@@ -82,4 +82,14 @@ class TipoPrestadoresController extends Controller
     {
         //
     }
+
+    public function obtenerPrestadores($estado) {
+        $prestadores = tipo_prestadores::where('estado', $estado)->get();
+        return array(
+            "success" => ($prestadores->isEmpty() ? false : true),
+            "mensaje" => ($prestadores->isEmpty() ? 'No hay prestadores disponibles.' : 'Aqui tenemos tus prestadores.'),
+            "datos" => $prestadores
+        );
+    }
+
 }
