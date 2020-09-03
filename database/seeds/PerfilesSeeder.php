@@ -11,7 +11,7 @@ class PerfilesSeeder extends Seeder
      */
     public function run()
     {
-        $nombres = ['Administrador', 'Empresa', 'Enfermero', 'Conductor'];
+        $nombres = ['Administrador', 'Empresa', 'Enfermero', 'Conductor', 'Usuario'];
         for ($i=0; $i < 4 ; $i++) {
             DB::table('perfiles')->insert([
                 'nombre' => $nombres[$i],

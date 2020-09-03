@@ -36,9 +36,9 @@ class UsuariosController extends Controller
             $usuario->direccion = $request->direccion;
             $usuario->password = $request->clave;
             $usuario->email = $request->email;
-            $usuario->estado = $request->estado;
-            $usuario->fk_perfil = $request->fk_perfil;
-            $usuario->fk_empresa = $request->fk_empresa;
+            $usuario->estado = +$request->estado;
+            $usuario->fk_perfil = +$request->perfil;
+            $usuario->fk_empresa = ($request->empresa !== 'null' ? $request->empresa : null);
             if ($usuario->save()) {
                 return array(
                     "success" => true,
