@@ -160,4 +160,12 @@ class UsuariosController extends Controller
         );
     }
 
+    public function obtenerUsuario($columna, $valor) {
+        $usuarios = usuarios::where($columna, $valor)->get();
+        return array(
+            "success" => ($usuarios->isEmpty() ? true : false),
+            "mensaje" => ($usuarios->isEmpty() ? 'El usuario no existe.' : 'El correo electronico ya existe.'),
+        );
+    }
+
 }

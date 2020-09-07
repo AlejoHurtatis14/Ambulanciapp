@@ -31,6 +31,7 @@ Route::middleware('validarInicioSesion')->group( function () {
         Route::post('usuarios/crear', 'UsuariosController@create');
         Route::get('usuarios/listar/{empresa}/{estado}', 'UsuariosController@obtenerUsuarios');
         Route::get('usuarios/inactivar/{idUsuario}', 'UsuariosController@inactivaActivarUsuario');
+        Route::get('usuarios/obtener/{columna}/{valor}', 'UsuariosController@obtenerUsuario');
 
         /* Rutas para ir a las consultas de las ambulancias */
         Route::post('ambulancia/crear', 'AmbulanciasController@create');

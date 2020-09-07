@@ -15,7 +15,7 @@ class ValidarToken {
    */
   public function handle($request, Closure $next) {
     $token = $request->header('Authorization', null);
-    $tiempoToken = $request->header('tokenTime', null);
+    $tiempoToken = $request->header('tokenTiempo', null);
     if ($token && time() < $tiempoToken) {
       $jwt = new JwtLogin();
       $tokenValido = $jwt->verificarToken($token);
@@ -30,7 +30,7 @@ class ValidarToken {
     return new JsonResponse(array(
       'success' => false,
       'token' => true,
-      'msj' => $mensaje
+      'mensaje' => $mensaje
     ), 200);
   }
 

@@ -33,13 +33,26 @@ class EmpresasController extends Controller
             $empresa->telefono = $request->telefono;
             $empresa->direccion = $request->direccion;
             $empresa->email = $request->email;
-            $empresa->estado = $request->estado;
-            $empresa->fk_prestador = $request->prestador;
+            $empresa->estado = +$request->estado;
+            $empresa->fk_prestador = +$request->prestador;
             if ($empresa->save()) {
-                return array(
-                    "success" => true,
-                    "mensaje" => "Se ha creado la empresa"
-                );
+                $usuario = new usuarios;
+                $usuario->documento = $request->documento;
+                $usuario->nombres = $request->razonSocial;
+                $usuario->apellidos = '';
+                $usuario->telefono = $request->telefono;
+                $usuario->direccion = $request->direccion;
+                $usuario->password = $request->documento;
+                $usuario->email = $request->email;
+                $usuario->estado = +$request->estado;
+                $usuario->fk_perfil = 2;
+                $usuario->fk_empresa = $empresa->id;
+                if ($usuario->save()) {
+                    return array(
+                        "success" => true,
+                        "mensaje" => "Se ha creado la empresa"
+                    );
+                }
             } else {
                 $mensaje = "No se ha podido crear la empresa.";
             }

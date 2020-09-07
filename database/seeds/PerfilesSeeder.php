@@ -16,7 +16,7 @@ class PerfilesSeeder extends Seeder
             DB::table('perfiles')->insert([
                 'nombre' => $nombres[$i],
                 'estado' => 1,
-                'empresa' => ($nombres[$i] === 'Administrador' || $nombres[$i] === 'Empresa' ? 0 : 1),
+                'empresa' => ($nombres[$i] === 'Administrador' || $nombres[$i] === 'Empresa' ? 0 : ($nombres[$i] != 'Usuario' ? null : 1)),
                 'created_at' => date('Y-m-d H:m:s'),
                 'updated_at' => date('Y-m-d H:m:s'),
             ]);
