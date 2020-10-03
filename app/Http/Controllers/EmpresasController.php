@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\empresas;
+use App\usuarios;
 use Illuminate\Http\Request;
 
 class EmpresasController extends Controller
@@ -25,8 +26,8 @@ class EmpresasController extends Controller
     public function create(Request $request)
     {
         $mensaje = "Este documento ya existe.";
-        $empresa = empresas::where('documento', $request->documento)->get();
-        if ($empresa->isEmpty()) {
+        $empresas = empresas::where('documento', $request->documento)->get();
+        if ($empresas->isEmpty()) {
             $empresa = new empresas;
             $empresa->razon_social = $request->razonSocial;
             $empresa->documento = $request->documento;
@@ -36,6 +37,13 @@ class EmpresasController extends Controller
             $empresa->estado = +$request->estado;
             $empresa->fk_prestador = +$request->prestador;
             if ($empresa->save()) {
+                error_log($empresa->id);
+                error_log($request->documento);
+                error_log($request->razonSocial);
+                error_log($request->telefono);
+                error_log($request->direccion);
+                error_log($request->email);
+                error_log($request->estado);
                 $usuario = new usuarios;
                 $usuario->documento = $request->documento;
                 $usuario->nombres = $request->razonSocial;
@@ -47,6 +55,7 @@ class EmpresasController extends Controller
                 $usuario->estado = +$request->estado;
                 $usuario->fk_perfil = 2;
                 $usuario->fk_empresa = $empresa->id;
+                error_log($usuario);
                 if ($usuario->save()) {
                     return array(
                         "success" => true,
@@ -105,7 +114,30 @@ class EmpresasController extends Controller
      */
     public function update(Request $request, empresas $empresas)
     {
-        //
+        $mensaje = "Este documento ya existe.";
+        $empresa = empresas::where('documento', $request->documento)->get();
+        if ($empresa->isEmpty() || ($empresa[0] && $empresa[0]['id'] === +$request['idEmpresa'])) {
+            $resul = empresas::where('id', +$request['idEmpresa'])->update([
+                "razon_social" => $request->razonSocial,
+                "documento" => $request->documento,
+                "telefono" => $request->telefono,
+                "direccion" => $request->direccion,
+                "email" => $request->email,
+                "fk_prestador" => +$request->prestador,
+            ]);
+            if($resul){
+                return array(
+                    "success" => true,
+                    "mensaje" => 'Modificado correctamente.'
+                );
+            } else {
+                $mensaje = "Error al modificar.";
+            }
+        }
+        return array(
+            "success" => false,
+            "mensaje" => $mensaje,
+        );
     }
 
     /**
@@ -145,6 +177,15 @@ class EmpresasController extends Controller
             "success" => ($empresas->isEmpty() ? false : true),
             "mensaje" => ($empresas->isEmpty() ? 'No hay empresas disponibles.' : 'Aqui tenemos tus empresas.'),
             "datos" => $empresas
+        );
+    }
+
+    public function obtenerEmpresa($columna, $valor) {
+        $empresa = empresas::where($columna, $valor)->get();
+        return array(
+            "success" => ($empresa->isEmpty() ? false : true),
+            "mensaje" => ($empresa->isEmpty() ? 'La empresa no existe.' : ''),
+            "datos" => $empresa,
         );
     }
 

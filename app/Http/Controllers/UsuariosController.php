@@ -161,10 +161,20 @@ class UsuariosController extends Controller
     }
 
     public function obtenerUsuario($columna, $valor) {
-        $usuarios = usuarios::where($columna, $valor)->get();
+        $usuario = usuarios::where($columna, $valor)->get();
         return array(
-            "success" => ($usuarios->isEmpty() ? true : false),
-            "mensaje" => ($usuarios->isEmpty() ? 'El usuario no existe.' : 'El correo electronico ya existe.'),
+            "success" => ($usuario->isEmpty() ? false : true),
+            "mensaje" => ($usuario->isEmpty() ? 'El usuario no existe.' : ''),
+            "datos" => $usuario
+        );
+    }
+
+    public function obtenerUsuariosEmpresa($empresa, $perfil) {
+        $usuarios = usuarios::where('fk_empresa', $empresa)->where('fk_perfil', $perfil)->get();
+        return array(
+            "success" => ($usuarios->isEmpty() ? false : true),
+            "mensaje" => ($usuarios->isEmpty() ? 'El usuario no existe.' : ''),
+            "datos" => $usuarios
         );
     }
 

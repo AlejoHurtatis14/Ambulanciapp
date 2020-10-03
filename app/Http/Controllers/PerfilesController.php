@@ -92,4 +92,13 @@ class PerfilesController extends Controller
         );
     }
 
+    public function obtenerPerfilesEmpresa ($estado, $empresa) {
+        $perfiles = perfiles::where('estado', $estado)->where('empresa', $empresa)->get();
+        return array(
+            "success" => ($perfiles->isEmpty() ? false : true),
+            "mensaje" => ($perfiles->isEmpty() ? 'No hay perfiles disponibles.' : 'Aqui tenemos tus perfiles.'),
+            "datos" => $perfiles
+        );
+    }
+
 }

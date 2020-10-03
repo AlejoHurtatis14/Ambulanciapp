@@ -32,16 +32,21 @@ Route::middleware('validarInicioSesion')->group( function () {
         Route::get('usuarios/listar/{empresa}/{estado}', 'UsuariosController@obtenerUsuarios');
         Route::get('usuarios/inactivar/{idUsuario}', 'UsuariosController@inactivaActivarUsuario');
         Route::get('usuarios/obtener/{columna}/{valor}', 'UsuariosController@obtenerUsuario');
+        Route::get('usuarios/empresa/{empresa}/{perfil}', 'UsuariosController@obtenerUsuariosEmpresa');
 
         /* Rutas para ir a las consultas de las ambulancias */
         Route::post('ambulancia/crear', 'AmbulanciasController@create');
         Route::get('ambulancia/listar/{empresa}/{estado}', 'AmbulanciasController@obtenerAmbulancias');
+        Route::get('ambulancia/obtener/{columna}/{valor}', 'AmbulanciasController@obtenerAmbulancia');
         Route::get('ambulancia/inactivar/{idAmbulancia}', 'AmbulanciasController@inactivaActivarAmbulancia');
+        Route::put('ambulancia/actualizar', 'AmbulanciasController@update');
 
         /* Rutas para ir a las consultas de las empresas */
         Route::post('empresa/crear', 'EmpresasController@create');
         Route::get('empresa/listar/{estado}', 'EmpresasController@obtenerEmpresas');
         Route::get('empresa/inactivar/{idEmpresa}', 'EmpresasController@inactivaActivarEmpresa');
+        Route::get('empresa/obtener/{columna}/{valor}', 'EmpresasController@obtenerEmpresa');
+        Route::put('empresa/actualizar', 'EmpresasController@update');
 
         /* Rutas para ir a las consultas de las atenciones de las ambulancias */
         Route::post('atencion/crear', 'AtencionesController@create');
@@ -49,6 +54,7 @@ Route::middleware('validarInicioSesion')->group( function () {
 
         /* Rutas para ir a las consultas de los perfiles */
         Route::get('perfil/listar/{estado}', 'PerfilesController@obtenerPerfiles');
+        Route::get('perfil/listar/empresa/{estado}/{empresa}', 'PerfilesController@obtenerPerfilesEmpresa');
 
         /* Rutas para ir a las consultas de los tipos de prestadores */
         Route::get('prestador/listar/{estado}', 'TipoPrestadoresController@obtenerPrestadores');
