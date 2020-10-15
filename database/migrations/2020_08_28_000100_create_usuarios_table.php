@@ -25,7 +25,7 @@ class CreateUsuariosTable extends Migration
             $table->boolean('estado');
             $table->bigInteger('fk_perfil')->unsigned();
             $table->foreign('fk_perfil')->references('id')->on('perfiles');
-            $table->bigInteger('fk_empresa')->unsigned();
+            $table->bigInteger('fk_empresa')->unsigned()->nullable();
             $table->foreign('fk_empresa')->references('id')->on('empresas');
             $table->timestamps();
         });

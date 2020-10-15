@@ -159,7 +159,7 @@ class AmbulanciasController extends Controller
     }
 
     public function obtenerAmbulancia($columna, $valor) {
-        $ambulancia = usuarios::where($columna, $valor)->get();
+        $ambulancia = ambulancias::where($columna, $valor)->get();
         return array(
             "success" => ($ambulancia->isEmpty() ? false : true),
             "mensaje" => ($ambulancia->isEmpty() ? 'La ambulancia no existe.' : ''),

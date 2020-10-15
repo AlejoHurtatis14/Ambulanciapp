@@ -16,7 +16,7 @@ class CreatePerfilesTable extends Migration
         Schema::create('perfiles', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nombre');
-            $table->boolean('empresa');
+            $table->boolean('empresa')->nullable();
             $table->boolean('estado');
             $table->timestamps();
         });

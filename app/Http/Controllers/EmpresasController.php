@@ -37,13 +37,6 @@ class EmpresasController extends Controller
             $empresa->estado = +$request->estado;
             $empresa->fk_prestador = +$request->prestador;
             if ($empresa->save()) {
-                error_log($empresa->id);
-                error_log($request->documento);
-                error_log($request->razonSocial);
-                error_log($request->telefono);
-                error_log($request->direccion);
-                error_log($request->email);
-                error_log($request->estado);
                 $usuario = new usuarios;
                 $usuario->documento = $request->documento;
                 $usuario->nombres = $request->razonSocial;

@@ -12,11 +12,11 @@ class PerfilesSeeder extends Seeder
     public function run()
     {
         $nombres = ['Administrador', 'Empresa', 'Enfermero', 'Conductor', 'Usuario'];
-        for ($i=0; $i < 4 ; $i++) {
+        for ($i=0; $i < 5 ; $i++) {
             DB::table('perfiles')->insert([
                 'nombre' => $nombres[$i],
                 'estado' => 1,
-                'empresa' => ($nombres[$i] === 'Administrador' || $nombres[$i] === 'Empresa' ? 0 : ($nombres[$i] != 'Usuario' ? null : 1)),
+                'empresa' => ($nombres[$i] === 'Administrador' || $nombres[$i] === 'Empresa' ? null : 0),
                 'created_at' => date('Y-m-d H:m:s'),
                 'updated_at' => date('Y-m-d H:m:s'),
             ]);

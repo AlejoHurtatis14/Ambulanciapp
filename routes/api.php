@@ -18,8 +18,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
 Route::middleware(['guest'])->group(function () {
     Route::group(['middleware' => ['cors']], function () {
+        Route::post('usuarios/crear/{datos}', 'UsuariosController@create');
         Route::get('login/{usuario}/{password}', 'UsuariosController@iniciarSesion');
     });
 });
@@ -28,11 +30,11 @@ Route::middleware('validarInicioSesion')->group( function () {
     Route::group(['middleware' => ['cors']], function () {
         
         /* Rutas para ir a las consultas de los usuarios */
-        Route::post('usuarios/crear', 'UsuariosController@create');
         Route::get('usuarios/listar/{empresa}/{estado}', 'UsuariosController@obtenerUsuarios');
         Route::get('usuarios/inactivar/{idUsuario}', 'UsuariosController@inactivaActivarUsuario');
         Route::get('usuarios/obtener/{columna}/{valor}', 'UsuariosController@obtenerUsuario');
         Route::get('usuarios/empresa/{empresa}/{perfil}', 'UsuariosController@obtenerUsuariosEmpresa');
+        Route::put('usuarios/actualizar/{datos}', 'UsuariosController@update');
 
         /* Rutas para ir a las consultas de las ambulancias */
         Route::post('ambulancia/crear', 'AmbulanciasController@create');

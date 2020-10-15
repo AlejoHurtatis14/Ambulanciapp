@@ -23,22 +23,23 @@ class UsuariosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Request $request, $datos)
     {
+        $datos = json_decode($datos);
         $mensaje = "El correo electronico ya existe.";
-        $validarCorreo = usuarios::where('email', $request->correo)->get();
+        $validarCorreo = usuarios::where('email', $datos->email)->get();
         if ($validarCorreo->isEmpty()) {
             $usuario = new usuarios;
-            $usuario->documento = $request->documento;
-            $usuario->nombres = $request->nombres;
-            $usuario->apellidos = $request->apellidos;
-            $usuario->telefono = $request->telefono;
-            $usuario->direccion = $request->direccion;
-            $usuario->password = $request->clave;
-            $usuario->email = $request->email;
-            $usuario->estado = +$request->estado;
-            $usuario->fk_perfil = +$request->perfil;
-            $usuario->fk_empresa = ($request->empresa !== 'null' ? $request->empresa : null);
+            $usuario->documento = $datos->documento;
+            $usuario->nombres = $datos->nombres;
+            $usuario->apellidos = $datos->apellidos;
+            $usuario->telefono = $datos->telefono;
+            $usuario->direccion = $datos->direccion;
+            $usuario->password = $datos->clave;
+            $usuario->email = $datos->email;
+            $usuario->estado = +$datos->estado;
+            $usuario->fk_perfil = +$datos->perfil;
+            $usuario->fk_empresa = ($datos->empresa !== 'null' ? +$datos->empresa : null);
             if ($usuario->save()) {
                 return array(
                     "success" => true,
@@ -94,9 +95,34 @@ class UsuariosController extends Controller
      * @param  \App\usuarios  $usuarios
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, usuarios $usuarios)
+    public function update(Request $request, usuarios $usuarios, $datos)
     {
-        //
+        $datos = json_decode($datos);
+        $mensaje = "Este documento ya existe.";
+        $usuario = usuarios::where('documento', $datos->documento)->get();
+        if ($usuario->isEmpty() || ($usuario[0] && $usuario[0]['id'] === +$datos->idUsuario)) {
+            $resul = usuarios::where('id', +$datos->idUsuario)->update([
+                "documento" => $datos->documento,
+                "nombres" => $datos->nombres,
+                "apellidos" => $datos->apellidos,
+                "telefono" => $datos->telefono,
+                "direccion" => $datos->direccion,
+                "password" => $datos->clave,
+                "email" => $datos->email,
+            ]);
+            if($resul){
+                return array(
+                    "success" => true,
+                    "mensaje" => 'Modificado correctamente.'
+                );
+            } else {
+                $mensaje = "Error al modificar.";
+            }
+        }
+        return array(
+            "success" => false,
+            "mensaje" => $mensaje,
+        );
     }
 
     /**
@@ -173,7 +199,7 @@ class UsuariosController extends Controller
         $usuarios = usuarios::where('fk_empresa', $empresa)->where('fk_perfil', $perfil)->get();
         return array(
             "success" => ($usuarios->isEmpty() ? false : true),
-            "mensaje" => ($usuarios->isEmpty() ? 'El usuario no existe.' : ''),
+            "mensaje" => ($usuarios->isEmpty() ? 'No hay datos.' : ''),
             "datos" => $usuarios
         );
     }
