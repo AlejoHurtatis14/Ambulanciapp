@@ -41,9 +41,11 @@ class UsuariosController extends Controller
             $usuario->fk_perfil = +$datos->perfil;
             $usuario->fk_empresa = ($datos->empresa !== 'null' ? +$datos->empresa : null);
             if ($usuario->save()) {
+                error_log("Usuario " . $usuario);
                 return array(
                     "success" => true,
-                    "mensaje" => "Se ha creado el usuario"
+                    "mensaje" => "Se ha creado el usuario",
+                    "idInsertado" => $usuario->id,
                 );
             } else {
                 $mensaje = "No se ha podido crear el usuario.";
