@@ -97,7 +97,7 @@ class UsuariosController extends Controller
      * @param  \App\usuarios  $usuarios
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, usuarios $usuarios, $datos)
+    public function update(Request $request, $datos)
     {
         $datos = json_decode($datos);
         $mensaje = "Este documento ya existe.";
