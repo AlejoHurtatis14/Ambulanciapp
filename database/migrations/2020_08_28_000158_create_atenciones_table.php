@@ -15,10 +15,15 @@ class CreateAtencionesTable extends Migration
     {
         Schema::create('atenciones', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('ubicacion');
-            $table->string('traslado');
-            $table->string('observacion');
+            $table->string('latitudInicial');
+            $table->string('longitudInicial');
+            $table->string('latitudFinal');
+            $table->string('longitudFinal');
             $table->string('estado');//Estado de si fue cumplido o no
+            $table->bigInteger('fk_enfermero')->unsigned();
+            $table->foreign('fk_enfermero')->references('id')->on('usuarios');
+            $table->bigInteger('fk_usuario')->unsigned();
+            $table->foreign('fk_usuario')->references('id')->on('usuarios');
             $table->bigInteger('fk_empresa')->unsigned();
             $table->foreign('fk_empresa')->references('id')->on('empresas');
             $table->bigInteger('fk_ambulancia')->unsigned();

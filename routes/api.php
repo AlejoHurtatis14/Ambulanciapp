@@ -50,16 +50,18 @@ Route::middleware('validarInicioSesion')->group( function () {
         Route::get('empresa/obtener/{columna}/{valor}', 'EmpresasController@obtenerEmpresa');
         Route::post('empresa/actualizar', 'EmpresasController@update');
 
-        /* Rutas para ir a las consultas de las atenciones de las ambulancias */
-        Route::post('atencion/crear', 'AtencionesController@create');
-        Route::get('atencion/listar/{empresa}/{estado}', 'AtencionesController@obtenerAtenciones');
-
         /* Rutas para ir a las consultas de los perfiles */
         Route::get('perfil/listar/{estado}', 'PerfilesController@obtenerPerfiles');
         Route::get('perfil/listar/empresa/{estado}/{empresa}', 'PerfilesController@obtenerPerfilesEmpresa');
 
         /* Rutas para ir a las consultas de los tipos de prestadores */
         Route::get('prestador/listar/{estado}', 'TipoPrestadoresController@obtenerPrestadores');
+
+        /* Rutas para ir a las consultas de las atenciones */
+        Route::post('atencion/crear', 'AtencionesController@create');
+        Route::post('atencion/actualizar', 'AtencionesController@update');
+        Route::get('atencion/obtener/{columna}/{valor}', 'AtencionesController@obtenerAtencionesColumna');
+        Route::get('atencion/listar/{empresa}/{estado}', 'AtencionesController@obtenerAtenciones');
 
     });
 });

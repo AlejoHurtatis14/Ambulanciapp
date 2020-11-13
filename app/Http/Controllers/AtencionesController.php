@@ -25,21 +25,24 @@ class AtencionesController extends Controller
     public function create(Request $request)
     {
         $atencion = new atenciones;
-        $atencion->ubicacion = $request->ubicacion;
-        $atencion->traslado = $request->traslado;
-        $atencion->observacion = $request->observacion;
+        $atencion->latitudInicial = $request->latitudInicial;
+        $atencion->longitudInicial = $request->longitudInicial;
+        $atencion->latitudFinal = $request->latitudFinal;
+        $atencion->longitudFinal = $request->longitudFinal;
         $atencion->estado = $request->estado;
-        $atencion->fk_empresa = $request->empresa;
-        $atencion->fk_ambulancia = $request->ambulancia;
+        $atencion->fk_enfermero = +$request->enfermero;
+        $atencion->fk_usuario = +$request->usuario;
+        $atencion->fk_empresa = +$request->empresa;
+        $atencion->fk_ambulancia = +$request->ambulancia;
         if ($atencion->save()) {
             return array(
                 "success" => true,
-                "mensaje" => "Se ha creado el registro del recorrido"
+                "mensaje" => "Datos guardados."
             );
         }
         return array(
             "success" => false,
-            "mensaje" => "No se ha podido guardar el registro del recorrido.",
+            "mensaje" => "Error al guardar los datos.",
         );
     }
 
@@ -85,7 +88,11 @@ class AtencionesController extends Controller
      */
     public function update(Request $request, atenciones $atenciones)
     {
-        //
+        $result = atenciones::where('id', +$request['idAtencion'])->update(["estado" => $request->estado]);
+        return array(
+            "success" => ($result ? true : false),
+            "mensaje" => ($result ? 'Modificado Correctamente' : 'Error al modificar.')
+        );
     }
 
     /**
@@ -110,6 +117,15 @@ class AtencionesController extends Controller
             "success" => ($atenciones->isEmpty() ? false : true),
             "mensaje" => ($atenciones->isEmpty() ? 'No hay atenciones disponibles.' : 'Aqui tenemos tus atenciones.'),
             "datos" => $atenciones
+        );
+    }
+
+    public function obtenerAtencionesColumna($columna, $valor) {
+        $atencion = atenciones::where($columna, $valor)->get();
+        return array(
+            "success" => ($atencion->isEmpty() ? false : true),
+            "mensaje" => ($atencion->isEmpty() ? 'No hay datos.' : ''),
+            "datos" => $atencion,
         );
     }
 
