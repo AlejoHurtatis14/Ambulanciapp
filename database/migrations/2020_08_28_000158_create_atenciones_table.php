@@ -20,13 +20,13 @@ class CreateAtencionesTable extends Migration
             $table->string('latitudFinal');
             $table->string('longitudFinal');
             $table->string('estado');//Estado de si fue cumplido o no
-            $table->bigInteger('fk_enfermero')->unsigned();
+            $table->bigInteger('fk_enfermero')->unsigned()->nullable();
             $table->foreign('fk_enfermero')->references('id')->on('usuarios');
             $table->bigInteger('fk_usuario')->unsigned();
             $table->foreign('fk_usuario')->references('id')->on('usuarios');
-            $table->bigInteger('fk_empresa')->unsigned();
+            $table->bigInteger('fk_empresa')->unsigned()->nullable();
             $table->foreign('fk_empresa')->references('id')->on('empresas');
-            $table->bigInteger('fk_ambulancia')->unsigned();
+            $table->bigInteger('fk_ambulancia')->unsigned()->nullable();
             $table->foreign('fk_ambulancia')->references('id')->on('ambulancias');
             $table->timestamps();
         });

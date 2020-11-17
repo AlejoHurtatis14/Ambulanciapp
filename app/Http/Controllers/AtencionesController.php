@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\atenciones;
+use App\ambulancias;
 use Illuminate\Http\Request;
 
 class AtencionesController extends Controller
@@ -24,25 +25,21 @@ class AtencionesController extends Controller
      */
     public function create(Request $request)
     {
+        $guardado = true;
         $atencion = new atenciones;
         $atencion->latitudInicial = $request->latitudInicial;
         $atencion->longitudInicial = $request->longitudInicial;
         $atencion->latitudFinal = $request->latitudFinal;
         $atencion->longitudFinal = $request->longitudFinal;
         $atencion->estado = $request->estado;
-        $atencion->fk_enfermero = +$request->enfermero;
         $atencion->fk_usuario = +$request->usuario;
-        $atencion->fk_empresa = +$request->empresa;
-        $atencion->fk_ambulancia = +$request->ambulancia;
         if ($atencion->save()) {
-            return array(
-                "success" => true,
-                "mensaje" => "Datos guardados."
-            );
+            $guardado = true;
         }
         return array(
-            "success" => false,
-            "mensaje" => "Error al guardar los datos.",
+            "success" => $guardado,
+            "mensaje" => ($guardado ? "Datos guardados." : "Error al guardar los datos."),
+            "idAtencion" => ($guardado ? $atencion->id : null)
         );
     }
 
@@ -88,7 +85,19 @@ class AtencionesController extends Controller
      */
     public function update(Request $request, atenciones $atenciones)
     {
-        $result = atenciones::where('id', +$request['idAtencion'])->update(["estado" => $request->estado]);
+        $update = array(
+            "estado" => $request->estado
+        );
+        if (!$request->editarEstado) {
+            $ambulancia = ambulancias::where('fk_enfermero_uno', +$request->enfermero)->orWhere('fk_enfermero_dos', +$request->enfermero)->get();
+            $add = array(
+                "fk_enfermero" => $request->enfermero,
+                "fk_empresa" => $request->empresa,
+                "fk_ambulancia" => ($ambulancia[0] ? $ambulancia[0]['id'] : null)
+            );
+            $update = array_merge($update, $add);
+        };
+        $result = atenciones::where('id', +$request['idAtencion'])->update($update);
         return array(
             "success" => ($result ? true : false),
             "mensaje" => ($result ? 'Modificado Correctamente' : 'Error al modificar.')
